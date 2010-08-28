@@ -3,6 +3,9 @@ from urllib2 import urlopen
 from hashlib import sha1
 from sys     import argv
 from socket  import gethostname, gethostbyname
+
+app = bottle.default_app()
+app.catchall = False
 	
 @route('/set/:key/:value')
 def setroute(key, value):

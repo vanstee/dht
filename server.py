@@ -1,11 +1,8 @@
-from bottle  import route, request, run
+from bottle  import route, request, run, app
 from urllib2 import urlopen
 from hashlib import sha1
 from sys     import argv
 from socket  import gethostname, gethostbyname
-
-app = bottle.default_app()
-app.catchall = False
 	
 @route('/set/:key/:value')
 def setroute(key, value):
@@ -155,4 +152,5 @@ if len(argv) == 2:
 	print partition
 	url.close()	
 
+app().catchall = False
 run(host=address, port=8080)

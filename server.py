@@ -6,8 +6,8 @@ from socket  import gethostname, gethostbyname
 	
 @route('/set/:key/:value')
 def setroute(key, value):
+	node = findnode(key)
 	keyhash = int(sha1(key).hexdigest(), 16)
-	node = findnode(keyhash)
 	if node == address:
 		try:
 			data[keyhash] = value
@@ -29,8 +29,8 @@ def setroute(key, value):
 
 @route('/get/:key')
 def getroute(key):
+	node = findnode(key)
 	keyhash = int(sha1(key).hexdigest(), 16)
-	node = findnode(keyhash)
 	if node == address:
 		try:
 			if keyhash in data:			
@@ -55,8 +55,8 @@ def getroute(key):
 		
 @route('/exists/:key')
 def existsroute(key):
+	node = findnode(key)
 	keyhash = int(sha1(key).hexdigest(), 16)
-	node = findnode(keyhash)
 	if node == address:
 		try:
 			if keyhash in data:

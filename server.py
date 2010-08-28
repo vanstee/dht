@@ -113,6 +113,7 @@ def findnode(key):
 		try:
 			url = urlopen('http://%s/contains/%s' % (node, key))
 			response = url.read()
+			print '%s %s' % (node, response)
 			url.close()
 			if bool(response):
 				return node

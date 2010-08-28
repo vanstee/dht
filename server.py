@@ -52,7 +52,7 @@ def nodesroute():
 @route('/size')
 def sizeroute():
 	nodes.add(urlparse(request.url).hostname)
-	return keyspace[1] - keyspace[0]
+	return str(keyspace[1] - keyspace[0])
 
 @route('/split')
 def splitroute():

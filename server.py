@@ -97,6 +97,27 @@ def splitroute():
 	middle = ((end - start) / 2) + start
 	partition[1] = middle
 	return '%d %d' % (middle + 1, end)
+	
+@route('/contains/:key')
+def containsroute():
+	keyhash = int(sha1(key).hexdigest(), 16)
+	if start >= key or end <= key:
+		return 'true'
+	else:
+		return 'false'
+		
+def findnode(key):
+	for node in nodes:
+		try:
+			url = urlopen('http://%s/contains/%s' % (node, key))
+			response = url.read()
+			url.close()
+			if bool(response):
+				return node
+		except:
+			pass
+	raise Exception('missing node')
+	return
 
 address = gethostbyname(gethostname())
 data = {}

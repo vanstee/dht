@@ -10,9 +10,6 @@ keyspace = [0, 128]
 nodes    = set()
 host     = gethostbyname(gethostname())
 
-if len(argv) == 2:
-	join()
-
 def join():
 	global nodes
 	node = argv[1]
@@ -63,5 +60,8 @@ def splitroute():
 	keyspace[1] = int((start + end) / 2)
 	return '%d %d' % (keyspace[1] + 1, end)
 
+if len(argv) == 2:
+	join()
+	
 app().catchall = False
 run(host = host, port = 8080)

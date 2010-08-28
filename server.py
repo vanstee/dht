@@ -123,7 +123,7 @@ if len(argv) == 2:
 		url.close()
 		if max_node > max_size:
 			max_node = node
-			max_size = size
+			max_size = node_size
 	node = max_node
 
 	url = urlopen('http://%s/split' % node)

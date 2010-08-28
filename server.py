@@ -99,7 +99,7 @@ def splitroute():
 	return '%d %d' % (middle + 1, end)
 	
 @route('/contains/:key')
-def containsroute():
+def containsroute(key):
 	keyhash = int(sha1(key).hexdigest(), 16)
 	if start >= keyhash or end <= keyhash:
 		return 'true'

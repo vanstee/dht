@@ -33,7 +33,7 @@ def join():
 			max_size = node_size
 	node = max_node
 	
-	url = urlopen('http://%s/split')
+	url = urlopen('http://%s/split' % node)
 	keyspace = url.read().split(' ')
 	url.close()
 		

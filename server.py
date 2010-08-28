@@ -37,7 +37,7 @@ def join():
 	keyspace = [int(i) for i in url.read().split(' ')]
 	url.close()
 		
-@route('/set/:key/value')
+@route('/set/:key/:value')
 def setroute(key, value):
 	hashkey = int(sha1(key).hexdigest(), 16)
 	if hashkey >= keyspace[0] and hashkey <= keyspace[1]:

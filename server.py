@@ -9,6 +9,7 @@ data     = []
 keyspace = [0, 0xffffffffffffffffffffffffffffffffffffffff]
 nodes    = set()
 host     = gethostbyname(gethostname())
+port     = '8080'
 
 def join():
 	global nodes, keyspace
@@ -18,7 +19,6 @@ def join():
 	url.close()
 	if response:
 		nodes = set(response.split(' '))
-	nodes.add(node)
 	
 	max_node = node
 	url = urlopen('http://%s/size' % node)
@@ -84,6 +84,7 @@ def nodesroute():
 @route('/size')
 def sizeroute():
 	nodes.add(urlparse(request.url).hostname)
+	print nodes
 	return str(keyspace[1] - keyspace[0])
 
 @route('/split')
@@ -96,4 +97,4 @@ if len(argv) == 2:
 	join()
 	
 app().catchall = False
-run(host = host, port = 8080)
+run(host = host, port = port)

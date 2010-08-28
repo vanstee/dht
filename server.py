@@ -11,7 +11,7 @@ nodes    = set()
 host     = gethostbyname(gethostname())
 
 def join():
-	global nodes
+	global nodes, keyspace
 	node = argv[1]
 	url = urlopen('http://%s/nodes' % node)
 	response = url.read()
@@ -34,7 +34,7 @@ def join():
 	node = max_node
 	
 	url = urlopen('http://%s/split' % node)
-	keyspace = url.read().split(' ')
+	keyspace = [int(i) for i in url.read().split(' ')]
 	url.close()
 		
 @route('/set/:key/value')

@@ -6,7 +6,7 @@ from sys      import argv
 from socket   import gethostname, gethostbyname
 
 data     = []
-keyspace = [0, 128]
+keyspace = [0, 0xffffffffffffffffffffffffffffffffffffffff]
 nodes    = set()
 host     = gethostbyname(gethostname())
 
@@ -39,11 +39,43 @@ def join():
 		
 @route('/set/:key/value')
 def setroute(key, value):
-	pass
+	hashkey = int(sha1(key).hexdigest(), 16)
+	if hashkey >= keyspace[0] and hashkey <= keyspace[1]:
+		if hashkey in data:
+			data[hashkey] = value
+			return 'success'
+		else
+			return 'failure'
+	else:
+		for node in nodes:
+			url = urlopen('http://%s/contains/%s' % (node, key))
+			if bool(url.read()):
+				redirect('http://%s/set/%s/%s' % (node, key, value)
+				break
+		#raise Exception('missing node')
+		return 'failure'
 
 @route('/get/:key')
 def getroute(key):
-	pass
+	hashkey = int(sha1(key).hexdigest(), 16)
+	if hashkey >= keyspace[0] and hashkey <= keyspace[1]:
+		if hashkey in data:	
+			return data[hashkey]
+		else:
+			return 'failure'
+	else:
+		for node in nodes:
+			url = urlopen('http://%s/contains/%s' % (node, key))
+			if bool(url.read()):
+				redirect('http://%s/get/%s/' % (node, key)
+				break
+		#raise Exception('missing node')
+		return 'failure'
+	
+@route('/contains/:key')
+def containsroute(key):
+	hashkey = int(sha1(key).hexdigest(), 16)
+	return str(hashkey >= keyspace[0] and hashkey <= keyspace[1]).lower()
 
 @route('/nodes')
 def nodesroute():

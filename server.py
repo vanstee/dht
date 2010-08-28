@@ -44,13 +44,13 @@ def setroute(key, value):
 		if hashkey in data:
 			data[hashkey] = value
 			return 'success'
-		else
+		else:
 			return 'failure'
 	else:
 		for node in nodes:
 			url = urlopen('http://%s/contains/%s' % (node, key))
 			if bool(url.read()):
-				redirect('http://%s/set/%s/%s' % (node, key, value)
+				redirect('http://%s/set/%s/%s' % (node, key, value))
 				break
 		#raise Exception('missing node')
 		return 'failure'
@@ -67,7 +67,7 @@ def getroute(key):
 		for node in nodes:
 			url = urlopen('http://%s/contains/%s' % (node, key))
 			if bool(url.read()):
-				redirect('http://%s/get/%s/' % (node, key)
+				redirect('http://%s/get/%s/' % (node, key))
 				break
 		#raise Exception('missing node')
 		return 'failure'

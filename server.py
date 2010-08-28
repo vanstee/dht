@@ -6,25 +6,78 @@ from socket  import gethostname, gethostbyname
 	
 @route('/set/:key/:value')
 def setroute(key, value):
-	try:
-		data[sha1(key)] = value
-		return 'success'
-	except:
-		return 'failure'
+	keyhash = int(sha1(key).hexdigest(), 16)
+	node = findnode(keyhash)
+	if node == address:
+		try:
+			data[keyhash] = value
+			print 'local key set success'
+			return 'success'
+		except:
+			print 'local key set failure'
+			return 'failure'
+	else:
+		try:
+			url = urlopen('http://%s/set/%s/%s' % (node, key, value))
+			response = url.read()
+			url.close()
+			print 'remote key set success'
+			return response
+		except:
+			print 'remote key set failure'		
+			return 'failure'
 
 @route('/get/:key')
 def getroute(key):
-	try:
-		return data[key]
-	except:
-		return 'failure'
+	keyhash = int(sha1(key).hexdigest(), 16)
+	node = findnode(keyhash)
+	if node == address:
+		try:
+			if keyhash in data:			
+				print 'local key get success'
+				return data[keyhash]
+			else:
+				print 'local key get failure (missing key)'
+				return 'failure'
+		except:
+			print 'local key get failure'
+			return 'failure'
+	else:
+		try:
+			url = urlopen('http://%s/get/%s' % (node, key))
+			response = url.read()
+			url.close()
+			print 'remote key get success'
+			return response
+		except:
+			print 'remote key get failure'
+			return 'failure'
 		
 @route('/exists/:key')
 def existsroute(key):
-	if key in data:
-		return 'true'
+	keyhash = int(sha1(key).hexdigest(), 16)
+	node = findnode(keyhash)
+	if node == address:
+		try:
+			if keyhash in data:
+				print 'local key exists success'
+				return 'success'
+			else:
+				print 'local key exists failure (missing key)'
+				return 'failure'
+		except:
+			print 'local key exists failure'
+			return 'failure'
 	else:
-		return 'false'
+		try:
+			url = urlopen('http://%s/get/%s' % (node, key))
+			response = url.read()
+			url.close()
+			print 'remote key exists success'
+			return response
+		except:
+			print 'remote key exists failure'
+			return 'failure'
 		
 @route('/nodes')
 def nodesroute():
@@ -35,20 +88,20 @@ def nodesroute():
 		
 @route('/size')
 def sizeroute():
-	return str(int(partition[1], 16) - int(partition[0], 16))
+	return str(partition[1] - partition[0])
 	
 @route('/split')
 def splitroute():
-	start = int(partition[0], 16)
-	end   = int(partition[1], 16)
-	middle = int((end - start) / 2) + start
+	start = partition[0]
+	end   = partition[1]
+	middle = ((end - start) / 2) + start
 	partition[1] = middle
 	return '%d %d' % (middle + 1, end)
 
 address = gethostbyname(gethostname())
 data = {}
 nodes = []
-partition = ['0', '1461501637330902918203684832716283019655932542975'] # sha1 integer space
+partition = [0x0L, 0xffffffffffffffffffffffffffffffffffffffffL] # sha1 space
 
 if len(argv) == 2:
 	node = argv[1]
@@ -74,7 +127,8 @@ if len(argv) == 2:
 	node = max_node
 
 	url = urlopen('http://%s/split' % node)
-	partitoin = url.read().split(' ')
+	partition = url.read().split(' ')
+	print partition
 	url.close()	
 
 run(host=address, port=8080)

@@ -101,6 +101,8 @@ def splitroute():
 @route('/contains/:key')
 def containsroute(key):
 	keyhash = int(sha1(key).hexdigest(), 16)
+	start = partition[0]
+	end   = partition[1]	
 	if start >= keyhash or end <= keyhash:
 		return 'true'
 	else:

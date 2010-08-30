@@ -83,7 +83,8 @@ def nodesroute():
 
 @route('/size')
 def sizeroute():
-	nodes.add(urlparse(request.url).hostname)
+	print request['REMOTE_ADDR']
+	nodes.add(request['REMOTE_ADDR'])
 	print nodes
 	return str(keyspace[1] - keyspace[0])
 

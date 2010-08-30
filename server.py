@@ -38,7 +38,8 @@ def join():
 	keyspace = [int(i) for i in url.read().split(' ')]
 	url.close()
 		
-@route('/set/:key/:value/?')
+@route('/set/:key/:value')
+@route('/set/:key/:value/')
 def setroute(key, value):
 	hashkey = int(sha1(key).hexdigest(), 16)
 	if hashkey >= keyspace[0] and hashkey <= keyspace[1]:
@@ -53,7 +54,8 @@ def setroute(key, value):
 		#raise Exception('missing node')
 		return 'failure'
 
-@route('/get/:key/?')
+@route('/get/:key')
+@route('/get/:key/')
 def getroute(key):
 	hashkey = int(sha1(key).hexdigest(), 16)
 	if hashkey >= keyspace[0] and hashkey <= keyspace[1]:
@@ -70,25 +72,30 @@ def getroute(key):
 		#raise Exception('missing node')
 		return 'failure'
 	
-@route('/contains/:key/?')
+@route('/contains/:key')
+@route('/contains/:key/')
 def containsroute(key):
 	hashkey = int(sha1(key).hexdigest(), 16)
 	return str(hashkey >= keyspace[0] and hashkey <= keyspace[1]).lower()
 
-@route('/nodes/?')
+@route('/nodes')
+@route('/nodes/')
 def nodesroute():
 	return ' '.join(nodes)
-	
-@route('/data/?')
+
+@route('/data')	
+@route('/data/')
 def dataroute():
 	return '\n'.join(['%s %s' % (key, data[key]) for key in data])
 
-@route('/size/?')
+@route('/size')
+@route('/size/')
 def sizeroute():
 	nodes.add(request['REMOTE_ADDR'] + ':8080')
 	return str(keyspace[1] - keyspace[0])
 
-@route('/split/?')
+@route('/split')
+@route('/split/')
 def splitroute():
 	start, end = keyspace
 	keyspace[1] = int((start + end) / 2)

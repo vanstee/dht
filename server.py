@@ -5,7 +5,7 @@ from hashlib  import sha1
 from sys      import argv
 from socket   import gethostname, gethostbyname
 
-data     = []
+data     = {}
 keyspace = [0, 0xffffffffffffffffffffffffffffffffffffffff]
 nodes    = set()
 host     = gethostbyname(gethostname())
@@ -41,7 +41,7 @@ def join():
 def setroute(key, value):
 	hashkey = int(sha1(key).hexdigest(), 16)
 	if hashkey >= keyspace[0] and hashkey <= keyspace[1]:
-		data[str(hashkey)] = value
+		data[hashkey] = value
 		return 'success'
 	else:
 		for node in nodes:
@@ -57,7 +57,7 @@ def getroute(key):
 	hashkey = int(sha1(key).hexdigest(), 16)
 	if hashkey >= keyspace[0] and hashkey <= keyspace[1]:
 		if hashkey in data:	
-			return data[str(hashkey)]
+			return data[hashkey]
 		else:
 			return 'failure'
 	else:

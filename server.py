@@ -7,8 +7,8 @@ from socket   import gethostname, gethostbyname
 
 data     = {}
 keyspace = [0, 0xffffffffffffffffffffffffffffffffffffffff]
+nodes    = set()
 host     = gethostbyname(gethostname())
-nodes    = set([host])
 port     = '8080'
 
 def join():
@@ -48,6 +48,7 @@ def setroute(key, value):
 			url = urlopen('http://%s/contains/%s' % (node, key))
 			if bool(url.read()):
 				redirect('http://%s/set/%s/%s' % (node, key, value))
+				break
 		#raise Exception('missing node')
 		return 'failure'
 

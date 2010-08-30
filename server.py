@@ -78,6 +78,10 @@ def containsroute(key):
 @route('/nodes/?')
 def nodesroute():
 	return ' '.join(nodes)
+	
+@routes('/data/?')
+def dataroute():
+	return '\n'.join(['%s %s' % (key, data[key]) for key in data])
 
 @route('/size/?')
 def sizeroute():

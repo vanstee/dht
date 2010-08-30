@@ -41,11 +41,8 @@ def join():
 def setroute(key, value):
 	hashkey = int(sha1(key).hexdigest(), 16)
 	if hashkey >= keyspace[0] and hashkey <= keyspace[1]:
-		if hashkey in data:
-			data[hashkey] = value
-			return 'success'
-		else:
-			return 'failure'
+		data[hashkey] = value
+		return 'success'
 	else:
 		for node in nodes:
 			url = urlopen('http://%s/contains/%s' % (node, key))
@@ -83,9 +80,7 @@ def nodesroute():
 
 @route('/size')
 def sizeroute():
-	print request['REMOTE_ADDR']
-	nodes.add(request['REMOTE_ADDR'])
-	print nodes
+	nodes.add(request['REMOTE_ADDR'] + ':8080')
 	return str(keyspace[1] - keyspace[0])
 
 @route('/split')

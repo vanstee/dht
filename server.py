@@ -22,11 +22,11 @@ def join():
 	
 	max_node = node
 	url = urlopen('http://%s/size' % node)
-	max_size = int(url.read())
+	max_size = long(url.read())
 	url.close()
 	for node in nodes:
 		url = urlopen('http://%s/size' % node)
-		node_size = int(url.read())
+		node_size = long(url.read())
 		url.close()
 		if node_size > max_size:
 			max_node = node
@@ -34,12 +34,12 @@ def join():
 	node = max_node
 	
 	url = urlopen('http://%s/split' % node)
-	keyspace = [int(i) for i in url.read().split(' ')]
+	keyspace = [long(i) for i in url.read().split(' ')]
 	url.close()
 		
 @route('/set/:key/:value')
 def setroute(key, value):
-	hashkey = int(sha1(key).hexdigest(), 16)
+	hashkey = long(sha1(key).hexdigest(), 16)
 	if hashkey >= keyspace[0] and hashkey <= keyspace[1]:
 		data[hashkey] = value
 		return 'success'
@@ -54,7 +54,7 @@ def setroute(key, value):
 
 @route('/get/:key')
 def getroute(key):
-	hashkey = int(sha1(key).hexdigest(), 16)
+	hashkey = long(sha1(key).hexdigest(), 16)
 	if hashkey >= keyspace[0] and hashkey <= keyspace[1]:
 		if hashkey in data:	
 			return data[hashkey]

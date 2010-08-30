@@ -19,6 +19,7 @@ def join():
 	url.close()
 	if response:
 		nodes = set(response.split(' '))
+	nodes.add(node)
 	
 	max_node = node
 	url = urlopen('http://%s/size' % node)
